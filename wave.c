@@ -131,7 +131,7 @@ double* audio_read(char* filename) {
 
 
  // calculate no.of samples
- long num_samples = (8 * header.data_size) / (header.channels * header.bits_per_sample);
+ long num_samples = (8 * header.data_size) / (header.channels * header.bits_per_sample);  // SORTIE A DONNER 
  printf("Number of samples:%lu \n", num_samples);
 
  long size_of_each_sample = (header.channels * header.bits_per_sample) / 8;
@@ -215,8 +215,8 @@ double* audio_read(char* filename) {
                             data_in_channel -= 128; //in wave, 8-bit are unsigned, so shifting to signed
                         }
                         offset += bytes_in_each_channel;	
-                        wav_data[i]=data_in_channel;
-                        if (i<10) printf("%d ", data_in_channel);
+                        wav_data[i]=(double)data_in_channel;
+                        if (i<10) printf("%d ",data_in_channel);
 
                         // check if value was in range
                         if (data_in_channel < low_limit || data_in_channel > high_limit)

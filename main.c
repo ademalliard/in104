@@ -78,28 +78,39 @@ while((c=fgetc(f))!=NULL){
         }
 
 //save final proba data in a .csv
-FILE* fp = fopen("path_to_feature_csv_file.csv", "a+"); 
+FILE* fp = fopen("feature.csv", "a+"); 
     if (fp==NULL){
         printf("Error in malloc\n");
         exit(1);
     }
-fprintf(fp,"\n");
+fprintf(fp," ");
 
 for (int sons = 0; sons < nbre_audio; ++sons)
 {
+    //dump sample data of the file
    wav_data=audio_read(filename);
+
+    //creation of the stft data
+   //printf(" samples=%d, window=%d, hop_size=%d,samplefreq=%d,length=%d, lgnes=%d, colonnes=%d\n",samples,windowSize,hop_size,sample_freq,length, lignes,colonnes);
+   //for (int j=0;j<5;++j) printf("wavedata=%f\n",wav_data[j]);
+    //for (int j=length-5;j<length;++j) printf("wavedata=%f\n",wav_data[j]);
    magnitude=stft(wav_data,samples,windowSize,hop_size,magnitude,sample_freq,length);
-   for (int j = 0; j < colonnes; j++)
+   for (int print = 0; print <10; print++) printf("magnitude[%d] = %.6f\n",print, magnitude[print]);
+   
+    //calculation of the mean and the std and writting in a .csv
+   for (int j = 0; j < lignes; j++)
    {
-       for (int i = 0; i < lignes; i++)
+       for (int i = 0; i < colonnes; i++)
        {
-           proba[2*j]=moy(une_colonne,lignes);
-           proba[2*j+1]=ecty(une_colonne,lignes);
-           fprintf(fp, "%.2f; %.2f\n", proba[2*j],proba[2*j+1]);
-       }
+            une_colonne[i]=magnitude[j+i*lignes];   //get one column
+        }
+        proba[2*j]=moy(une_colonne,colonnes);
+        proba[2*j+1]=ecty(une_colonne,colonnes);
+        fprintf(fp, "%.6f; %.6f;", proba[2*j],proba[2*j+1]);
+        if(j<3) printf("moy=%.2f-ecty=%.2f ; ",proba[2*j],proba[2*j+1]);
    }
-   fprintf(fp, "%.2f; %d; ", magnitude[sons], sons);
-   printf("%d\n",sons );
+   printf("\nFile .csv written.\n");
+   fprintf(fp,"\n");
 }
 /*
 for (int sons = 0; sons < nbre_audio; ++sons)

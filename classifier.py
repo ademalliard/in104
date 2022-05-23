@@ -1,3 +1,4 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import LabelEncoder, RobustScaler
@@ -7,16 +8,20 @@ from sklearn.svm import LinearSVC
 import numpy as np
 
 ### Entraînement du classifieur
+print("Hello")
+PATH = r'/home/ensta/in104/feature.csv'
 
-PATH = r'./data/features.csv'
+dataset = np.genfromtxt(PATH, delimiter=",")
 
-dataset = pd.read_csv(PATH,sep=';')
-columns = dataset.columns.tolist() # get the columns
+print(dataset.shape)
 
-batch_audio = pd.DataFrame(dataset).to_numpy()
+features = dataset[:, 1:-2] # prend tout le tableau sauf la première et la dernière colonne. 
 
-features = batch_audio[:, 1:]
-y = batch_audio[:, 0]
+print(f"Le tableau des descripteurs est de dimension : {features.shape}.") 
+
+# Il devrait être de dimensions 1000 x 514, si le nombre de colonne n'est pas le bon vous pouvez modifier features = dataset[:, 1:-1] par features = dataset[:, 1:-2] (cela supprime les 2 dernières colonnes)
+
+y = dataset[:, 0]
 
 X_train, X_test, y_train, y_test = train_test_split(features, y, test_size=0.2, random_state=0)
 
@@ -31,11 +36,11 @@ print("Performances du modèle sur la base de données de test : ", model.score(
 
 ### Save W and b
 
-b = model.intercept_
-w = model.coef_
+# b = model.intercept_
+# w = model.coef_
 
-np.savetxt("path to w", w, fmt='%.4f',delimiter=",")
-np.savetxt("path to b", b, fmt='%.4f',delimiter=",")
+# np.savetxt("path to w", w, fmt='%.4f',delimiter=",")
+# np.savetxt("path to b", b, fmt='%.4f',delimiter=",")
 
 ### Plot Confusion Matrix
 
