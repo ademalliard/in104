@@ -7,6 +7,7 @@
 #include "wave.h"
 #include "stft.h"
 #include "proba.h"
+#include "utils.h"
 
 int main(int argc, char const *argv[]) {
 
@@ -30,6 +31,22 @@ int main(int argc, char const *argv[]) {
         printf("%s\n", filename);
     }
 
+/*
+FILE* fp = fopen("path to feature csv file", "a+"); 
+if (fp==NULL){
+    printf("Error in malloc\n");
+    exit(1);
+}
+while((c=fgetc(f))!=NULL){
+    
+}
+    */
+
+    //char*audios="../genres/blues/blues.00000.wav";
+    int nbre_audio=1;
+    //while(audios[nbre_audio]!='\0') nbre_audio++;
+    printf("NOMBRE AUDIO : %d\n",nbre_audio );
+
 // define parameters
     int sample_freq = 22050;
     int length = 661794;
@@ -39,46 +56,97 @@ int main(int argc, char const *argv[]) {
     int lignes = (windowSize/2)+1;
     int samples = colonnes*lignes;
 
-//dump sample data of the file
-    double* wav_data = malloc(sizeof(double)*length);
+    double* wav_data = malloc(sizeof(double)*length); //donnees du son
         if (wav_data == NULL) {
-         printf("Error in malloc\n");
-         exit(1);
+            printf("Error in malloc\n");
+            exit(1);
         }
-    wav_data = audio_read(filename);
-
-//creation of the stft data
-    double* magnitude = malloc(sizeof(double)*samples);
+    double* magnitude = malloc(sizeof(double)*samples); //donnees du spectre du son
         if (magnitude == NULL) {
-         printf("Error in malloc\n");
+            printf("Error in malloc\n");
+            exit(1);
+        }
+    double* une_colonne = malloc(sizeof(double)*lignes);  //recuperation d'une colonne de magnitude
+        if (une_colonne == NULL) {
+            printf("Error in malloc\n");
+            exit(1);
+        }
+    double* proba = malloc(sizeof(double)*(colonnes*2+1)); //moyennes et ecart-types
+         if (proba == NULL) {
+         printf("Error in malloc\n");                        //x
          exit(1);
         }
-    magnitude = stft(wav_data, samples, windowSize, hop_size, magnitude, sample_freq, length);
-    for (int i = 0; i < 10; ++i) printf("%.2f\n", magnitude[i]);
 
-//calculation of the mean and the std
-    double* probas = malloc(sizeof(double)*lignes*2);
-        if (probas == NULL) {
-         printf("Error in malloc\n");
-         exit(1);
-        }
-    probas=proba(magnitude, lignes, colonnes);
-
- //save result in a .csv
-    FILE* fp = fopen("path to feature csv file", "a+"); // ouvre le fichier csv.
-    double mean[lignes], std[lignes];
-    for (int i = 0; i < lignes; i++) {
-        mean[i]=probas[2*i];
-        std[i]=probas[2*i+1];
-        fprintf(fp, "%.2f, %.2f, ", mean[i], std[i]);
-        if (i<3) printf("moy%d = %.2f, std%d = %.2f\n", i+1, mean[i], i+1, std[i]); 
+//save final proba data in a .csv
+FILE* fp = fopen("path_to_feature_csv_file.csv", "a+"); 
+    if (fp==NULL){
+        printf("Error in malloc\n");
+        exit(1);
     }
-    printf("path to feature csv file written\n");
-    fclose(fp); // ferme le fichier csv.
+fprintf(fp,"\n");
 
-    free(probas);
+for (int sons = 0; sons < nbre_audio; ++sons)
+{
+   wav_data=audio_read(filename);
+   magnitude=stft(wav_data,samples,windowSize,hop_size,magnitude,sample_freq,length);
+   for (int j = 0; j < colonnes; j++)
+   {
+       for (int i = 0; i < lignes; i++)
+       {
+           proba[2*j]=moy(une_colonne,lignes);
+           proba[2*j+1]=ecty(une_colonne,lignes);
+           fprintf(fp, "%.2f; %.2f\n", proba[2*j],proba[2*j+1]);
+       }
+   }
+   fprintf(fp, "%.2f; %d; ", magnitude[sons], sons);
+   printf("%d\n",sons );
+}
+/*
+for (int sons = 0; sons < nbre_audio; ++sons)
+{
+    //dump sample data of the file
+        wav_data = audio_read(filename);
+
+    //creation of the stft data
+        magnitude = stft(wav_data, samples, windowSize, hop_size, magnitude, sample_freq, length);
+        for (int i = 0; i < 10; ++i) printf("%.2f\n", magnitude[i]);
+
+    //calculation of the mean and the std and writting in the .csv
+        for (int j = 0; j < colonnes; ++j) {
+            for (int i = 0; i < lignes; ++i) une_colonne[i]=magnitude[j+i*lignes];
+            proba[2*j]=moy(une_colonne,lignes);
+            proba[2*j+1]=ecty(une_colonne,lignes);
+            //if (j<3) printf("moy%d = %.2f, std%d = %.2f\n", j+1, proba[2*j], j+1, proba[2*j+1]);
+            fprintf(fp, "%.2f; %.2f; ", proba[2*j], proba[2*j+1]);
+        }
+        printf("Path to feature csv file written\n");
+        fprintf(fp,"\n");
+}
+fclose(fp); // ferme le fichier csv.
+
+
+//lecture du .csv cree par python
+    int n=514;
+    int m=10;
+    double csv_py[m][n];
+    read_array("path to w", n, m, csv_py);
+
+//module de prediction
+    double* resultats = malloc(sizeof(double)*n); //moyennes et ecart-types
+         if (resultats == NULL) {
+         printf("Error in malloc\n");                        //x
+         exit(1);
+        }
+    resultats=linear_add_vectors(W,x,b,m,n,resultats);
+    double resultat=argmax(resultats);
+    printf("Le resultat de la prediction est : %.2f\n",resultat);
+ 
+    free(resultats);
+    free(proba);
+    free(une_colonne);
     free(magnitude);
     free(wav_data);
+*/
 
     return 0;
-}
+ }

@@ -31,9 +31,9 @@ double ecty(double* vecteur, int nbre_de_lignes)
 	return ety;
 }
 
-double* proba(double* magnitude,int nbre_de_lignes, int nbre_de_colonnes)
+double* probas(double* magnitude,int nbre_de_lignes, int nbre_de_colonnes, double*proba)
 {
-	double* vecteur[nbre_de_colonnes];
+	double* vecteur=malloc(sizeof(double)*nbre_de_lignes);
 	for (int j=1;j<=nbre_de_lignes;++j)
 	{
 		for (int i=1;i<= nbre_de_colonnes;++i)
@@ -43,6 +43,8 @@ double* proba(double* magnitude,int nbre_de_lignes, int nbre_de_colonnes)
 		proba[2*(j-1)+1]=moy(vecteur,nbre_de_colonnes);
 		proba[2*(j-1)+2]=ecty(vecteur,nbre_de_colonnes);
 	}
+	free(vecteur);
+	return proba;
 }
 
 
