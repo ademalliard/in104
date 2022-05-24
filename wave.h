@@ -17,7 +17,7 @@ struct HEADER {
 	unsigned int data_size;						// NumSamples * NumChannels * BitsPerSample/8 - size of the next chunk that will be read
 };
 
-double* audio_read (char* filename);
+void audio_read (char* filename,double**wav_data, long* num_sample);
 
 char* seconds_to_time (float raw_seconds);
 

@@ -8,12 +8,12 @@ from sklearn.svm import LinearSVC
 import numpy as np
 
 ### Entraînement du classifieur
-print("Hello")
-PATH = r'/home/ensta/in104/feature.csv'
+#print("Hello")
+PATH = r'/home/ensta/in104/feature_emeline.csv'
 
 dataset = np.genfromtxt(PATH, delimiter=",")
 
-print(dataset.shape)
+#print(dataset.shape)
 
 features = dataset[:, 1:-2] # prend tout le tableau sauf la première et la dernière colonne. 
 
@@ -36,11 +36,11 @@ print("Performances du modèle sur la base de données de test : ", model.score(
 
 ### Save W and b
 
-# b = model.intercept_
-# w = model.coef_
+b = model.intercept_
+w = model.coef_
 
-# np.savetxt("path to w", w, fmt='%.4f',delimiter=",")
-# np.savetxt("path to b", b, fmt='%.4f',delimiter=",")
+np.savetxt("./w.csv", w, fmt='%.4f',delimiter=",")
+np.savetxt("./b.csv", b, fmt='%.4f',delimiter=",")
 
 ### Plot Confusion Matrix
 

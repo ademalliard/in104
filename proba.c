@@ -6,8 +6,6 @@
 
 
 
-
-
 double moy(double* vecteur, int nbre_de_colonnes)
 {
 	double moyenne = 0 ;
@@ -27,12 +25,12 @@ double ecty(double* vecteur, int nbre_de_colonnes)
 	{
 		ety=ety + pow(vecteur[i]-moyenne,2) ;
 	}
-	ety=sqrt(ety/(nbre_de_colonnes - 1));
+	ety=sqrt(ety/(nbre_de_colonnes-1));
 	return ety;
 }
 
-/*double* probas(double* magnitude,int nbre_de_lignes, int nbre_de_colonnes, double*proba)
-;
+double* probas(double* magnitude,int nbre_de_lignes, int nbre_de_colonnes, double*proba)
+{
 	double* vecteur=malloc(sizeof(double)*nbre_de_lignes);
 	for (int j=1;j<=nbre_de_lignes;++j)
 	{
@@ -45,7 +43,7 @@ double ecty(double* vecteur, int nbre_de_colonnes)
 	}
 	free(vecteur);
 	return proba;
-}*/
+}
 
 
 
@@ -105,15 +103,18 @@ double ecty(double* vecteur, int nbre_de_colonnes)
 
 /*int main()
 {
-	int nbre_de_lignes =41 ;
+	int nbre_de_lignes =4 ;
 	double vecteur[nbre_de_lignes];
-	for (int j=0; j<nbre_de_lignes;++j) vecteur[j]=j*10 ;
+	vecteur[0]=44;
+	vecteur[1]=11;
+	vecteur[2]=22;
+	vecteur[3]=33;
 	double moyenne=moy(vecteur,nbre_de_lignes);
 	double ety=ecty(vecteur,nbre_de_lignes);
 	printf("moy=%f\n",moyenne);
 	printf("ecrtatype=%f\n",ety);
 	
-}*/
+}*/	
 
 /*
 int main() // TEST

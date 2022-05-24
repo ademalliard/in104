@@ -30,13 +30,14 @@ void read_array(char filename[],  int m, int n, double arr[][n])
     }
 }
 
-double* linear_add_vectors(double**W,double*x,double*b,int n_col,int n_lin,double*result)
+void linear_add_vectors(int m, int n,double W[m][n], double*x, double b[m][1], double result[m][1])  //
 {
-    for (int i = 0; i < n_lin; ++i) {
-        for (int k = 0; k < n_col; ++k) {
-            result[i]=result[i]+W[i][k]*x[k];
+    for (int i = 0; i < m; ++i) result[i][0]=0;
+
+    for (int i = 0; i < m; ++i) {
+        for (int k = 0; k < n; ++k) {
+            result[i][0]=result[i][0]+W[i][k]*x[k];
         }
-        result[i]=result[i]+b[i];
+        result[i][0]=result[i][0]+b[i][0];
     }
-    return result;
 }

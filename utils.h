@@ -3,7 +3,6 @@
 
 void read_array(char filename[],  int m, int n, double arr[][n]);
 
-double* linear_add_vectors(double**W,double*x,double*b,int n_col,int n_lin,double*result);
-
+void linear_add_vectors(int m, int n,double W[m][n], double*x, double b[m][1], double result[m][1]);
 
 #endif
